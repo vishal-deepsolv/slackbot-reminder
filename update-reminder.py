@@ -4,6 +4,7 @@ from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 import schedule
 import time
+import datetime  # Import datetime to check the day of the week
 
 # Load environment variables from .env file
 load_dotenv()
@@ -45,6 +46,11 @@ def send_startup_message():
             print(f"Error sending startup message to {channel}: {e.response['error']}")
 
 def send_reminder():
+    # Check if today is Saturday (5) or Sunday (6)
+    if datetime.datetime.today().weekday() in (5, 6):
+        print("Weekend detected. No reminder message sent.")
+        return
+
     for channel in channels:
         try:
             response = client.chat_postMessage(
